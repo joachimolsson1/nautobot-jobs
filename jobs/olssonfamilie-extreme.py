@@ -19,7 +19,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         description="tenant navn på kunden."
     )    
 
-    def run(self, data, commit):
+    def run(self, data, commit, api_token):
         #api_token = data["api_token"]
         base_url = 'https://api.extremecloudiq.com'
         headers = {
