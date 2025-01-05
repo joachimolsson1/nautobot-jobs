@@ -1,3 +1,4 @@
+from nautobot.apps.jobs import Job, register_jobs
 import requests
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceRole, DeviceType, Site, Interface, Location
