@@ -57,7 +57,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             device_type, _ = DeviceType.objects.get_or_create(model=device_model)
             status = Status.objects.get(name='Active')  # Adjust status as needed
 
-            tenant = Tenant.objects.get(name=f'{tenant_name}')
+            tenant = Tenant.objects.get(name=f"{tenant_name}")
             # Create or fetch location 
             location = Location.objects.get_or_create(
                 name=device["locations"][1],
