@@ -101,4 +101,4 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         return "Job completed successfully!"
 
 # Register the job
-jobs = [FetchAndAddExtremeCloudIQDevices]
+register_jobs(FetchAndAddExtremeCloudIQDevices)
