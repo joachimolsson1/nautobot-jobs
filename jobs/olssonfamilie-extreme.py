@@ -63,7 +63,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             #tenant = Tenant.objects.get(name=f"{tenant_name}")
             # Create or fetch location 
             existing_location = Location.objects.filter(name=device["locations"][1], tenant=tenant_name).first()
-            if not existing_device:
+            if not existing_location:
 
                 device_location = Location(
                     name=device["locations"][1],
