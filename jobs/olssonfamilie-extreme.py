@@ -90,7 +90,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             if existing_device:
                 # Update existing device
                 existing_device.name = device_name
-                existing_device.device_role = role_existing
+                existing_device.role = role_existing
                 existing_device.device_type = device_type
                 #existing_device.site = site
                 existing_device.status = status
@@ -104,7 +104,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 nautobot_device = Device(
                     name=device_name,
                     serial=device_serial,
-                    device_role=role_existing,
+                    role=role_existing,
                     #manufacturer=manufacturer,
                     device_type=device_type,
                     tenant=tenant_name,
