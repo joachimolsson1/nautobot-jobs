@@ -42,7 +42,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             if len(data['data']) < page_size:
                 break  # No more pages to fetch
             page += 1
-        for device in devices["data"]:
+        for device in devices:
             self.logger.info(f"Fetched Device: {device}")
 
             # Example of adding a device to Nautobot
