@@ -126,7 +126,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Create Namespace
             else:
                 new_namespace = Namespace(
-                    name=tenant_name,
+                    name=tenant_name.name(),
                     location=device_location
                 )
                 new_namespace.save()
