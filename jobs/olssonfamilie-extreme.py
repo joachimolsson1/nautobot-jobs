@@ -127,7 +127,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             else:
                 new_namespace = Namespace(
                     name=tenant_name,
-                    location=location_type,
+                    location=device_location
                 )
                 new_namespace.save()
                 self.logger.info(f"Created namespace in Nautobot: {tenant_name}")
