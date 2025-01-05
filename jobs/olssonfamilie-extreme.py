@@ -32,7 +32,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
         if response.status_code == 200:
             devices = response.json()
-            for device in devices:
+            for device in devices["data"]:
                 self.logger.info(f"Fetched Device: {device}")
 
                 # Example of adding a device to Nautobot
