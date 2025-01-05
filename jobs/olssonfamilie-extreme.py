@@ -64,16 +64,17 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Create or fetch location 
             existing_location = Location.objects.filter(name=device["locations"][1], tenant=tenant_name).first()
             if not existing_location:
-                device_location = Location(
+                new_location = Location(
                     location_name=device["locations"][1]["name"],
                     tenant=tenant_name,
                     location_type=location_type,
                     status=status
                 )
-                device_location.save()
+                new_location.save()
                 self.logger.info(f"Created Location in Nautobot: {device["locations"][1]}")
 
             # Check for existing device
+            device_location = Location.objects.filter(name=device["locations"][1], tenant=tenant_name).first()
             existing_device = Device.objects.filter(serial=device_serial).first()
             if existing_device:
                 # Update existing device
