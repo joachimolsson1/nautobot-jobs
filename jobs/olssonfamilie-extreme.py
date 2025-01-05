@@ -23,7 +23,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     )
 
     def run(self, api_token, tenant_name):
-        tenant_name_string = tenant_name.name
+        tenant_name_string = str(tenant_name.name)
         base_url = 'https://api.extremecloudiq.com'
         headers = {
             'Authorization': f'Bearer {api_token}',
@@ -120,7 +120,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Update Namespace
             existing_namespace = Namespace.objects.filter(name=tenant_name).first()
             if existing_namespace:
-                existing_namespace.name = tenant_name
+                existing_namespace.name = tenant_name_string
                 existing_namespace.location = device_location
                 existing_namespace.save()
                 self.logger.info(f"Updated Namespace in Nautobot: {tenant_name}")
