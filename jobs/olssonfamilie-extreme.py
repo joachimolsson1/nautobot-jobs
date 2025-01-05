@@ -2,7 +2,7 @@ import requests
 from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
@@ -58,13 +58,13 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Fetch or create the necessary related objects
             device_type, _ = DeviceType.objects.get_or_create(model=device_model)
             status = Status.objects.get(name='Active')  # Adjust status as needed
-
+            type_location = LocationType.objects.get(name="Site")
             #tenant = Tenant.objects.get(name=f"{tenant_name}")
             # Create or fetch location 
             location = Location.objects.get_or_create(
                 name=device["locations"][1],
                 tenant=tenant_name,
-                location_type="Site"
+                location_type=type_location
             )
             self.logger.info(f"Created Location in Nautobot: {location}")
 
