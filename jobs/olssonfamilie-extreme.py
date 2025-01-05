@@ -19,7 +19,6 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     )
     tenant_name = ObjectVar(
         model=Tenant,
-        query_params={"can_view": True},
         label="Tenant",
     )
 
