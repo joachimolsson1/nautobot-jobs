@@ -99,7 +99,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     tenant=tenant_name,
                     #site=site,
                     status=status,
-                    location=location  # Set the last location as campus
+                    location=device_location # Set the last location as campus
                 )
                 nautobot_device.save()
                 self.logger.info(f"Added Device to Nautobot: {device_name}")
