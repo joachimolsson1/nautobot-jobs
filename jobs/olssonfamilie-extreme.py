@@ -4,6 +4,8 @@ from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
+from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
+
 
 class FetchAndAddExtremeCloudIQDevices(Job):
     class Meta:
