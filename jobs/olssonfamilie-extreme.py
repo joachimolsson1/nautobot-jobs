@@ -17,7 +17,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant_name = Job.ModelChoiceField(
+    tenant_name = ModelChoiceField(
         queryset=Tenant.objects.all(),
         label="Tenant"
     )
