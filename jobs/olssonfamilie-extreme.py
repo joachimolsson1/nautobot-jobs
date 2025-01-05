@@ -1,4 +1,5 @@
 import requests
+from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, Manufacturer
@@ -6,7 +7,6 @@ from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
-from nautobot.core.forms import DynamicModelChoiceField
 
 
 class FetchAndAddExtremeCloudIQDevices(Job):
