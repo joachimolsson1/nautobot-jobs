@@ -33,7 +33,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         if response.status_code == 200:
             devices = response.json()
             for device in devices:
-                self.log_info(message=f"Fetched Device: {device}")
+                self.logger.info(message=f"Fetched Device: {device}")
 
                 # Example of adding a device to Nautobot
                 # Adjust the fields according to your device data and Nautobot setup
@@ -72,7 +72,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     existing_device.status = status
                     existing_device.location = parent_location  # Set the last location as campus
                     existing_device.save()
-                    self.log_success(message=f"Updated Device in Nautobot: {device_name}")
+                    self.logger.info(message=f"Updated Device in Nautobot: {device_name}")
                 else:
                     # Create new device
                     nautobot_device = Device(
@@ -85,7 +85,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                         location=parent_location  # Set the last location as campus
                     )
                     nautobot_device.save()
-                    self.log_success(message=f"Added Device to Nautobot: {device_name}")
+                    self.logger.info(message=f"Added Device to Nautobot: {device_name}")
 
                 # Add IP address and associate with management interface
                 if device_ip:
@@ -96,12 +96,12 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                         defaults={'type': 'virtual'}  # Adjust interface type as needed
                     )
                     if not created:
-                        self.log_info(message=f"Management interface already exists for {device_name}")
+                        self.logger.info(message=f"Management interface already exists for {device_name}")
                     management_interface.ip_addresses.add(ip_address)
                     management_interface.save()
-                    self.log_success(message=f"Assigned IP {device_ip} to {device_name} management interface")
+                    self.logger.info(message=f"Assigned IP {device_ip} to {device_name} management interface")
         else:
-            self.log_error(message=f"Error: {response.status_code}")
+            self.logger.error(message=f"Error: {response.status_code}")
 
         return "Job completed successfully!"
 
