@@ -23,6 +23,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     )
 
     def run(self, api_token, tenant_name):
+        tenant_name_string = tenant_name.name
         base_url = 'https://api.extremecloudiq.com'
         headers = {
             'Authorization': f'Bearer {api_token}',
@@ -126,7 +127,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Create Namespace
             else:
                 new_namespace = Namespace(
-                    name=tenant_name.name,
+                    name=tenant_name_string,
                     location=device_location
                 )
                 new_namespace.save()
