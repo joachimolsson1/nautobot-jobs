@@ -65,7 +65,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             existing_location = Location.objects.filter(name=device["locations"][1], tenant=tenant_name).first()
             if not existing_location:
                 device_location = Location(
-                    name=device["locations"][1]["name"],
+                    location_name=device["locations"][1]["name"],
                     tenant=tenant_name,
                     location_type=location_type,
                     status=status
@@ -83,7 +83,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 #existing_device.site = site
                 existing_device.status = status
                 existing_device.manufacturer = "Extreme Networks"
-                existing_device.location = device["locations"][1]["name"]  # Set the last location as campus
+                existing_device.location = device_location  # Set the last location as campus
                 existing_device.tenant = tenant_name
                 existing_device.save()
                 self.logger.info(f"Updated Device in Nautobot: {device_name}")
