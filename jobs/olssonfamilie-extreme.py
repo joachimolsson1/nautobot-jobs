@@ -68,6 +68,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     existing_device.device_type = device_type
                     #existing_device.site = site
                     existing_device.status = status
+                    existing_device.manufacturer = "Extreme Networks"
                     existing_device.location = parent_location  # Set the last location as campus
                     existing_device.save()
                     self.logger.info(f"Updated Device in Nautobot: {device_name}")
@@ -77,9 +78,10 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                         name=device_name,
                         serial=device_serial,
                         #device_role=device_role,
+                        manufacturer="Extreme Networks",
                         device_type=device_type,
                         #site=site,
-                        status=status,
+                        status=status
                         #location=parent_location  # Set the last location as campus
                     )
                     nautobot_device.save()
