@@ -37,12 +37,12 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
                 # Example of adding a device to Nautobot
                 # Adjust the fields according to your device data and Nautobot setup
-                device_name = device.get('name')
-                device_serial = device.get('serial')
-                device_model = device.get('model')
+                device_name = device.get('hostname')
+                device_serial = device.get('serial_number')
+                device_model = device.get('product_type')
                 device_ip = device.get('ip_address')  # Adjust according to actual field name
-                device_role_name = 'default-role'  # Replace with actual role name
-                site_name = 'default-site'  # Replace with actual site name
+                #device_role_name = 'default-role'  # Replace with actual role name
+                #site_name = 'default-site'  # Replace with actual site name
                 location_hierarchy = ['Region', 'Building', 'Campus']  # Example hierarchy
 
                 # Fetch or create the necessary related objects
@@ -55,7 +55,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     location, _ = Location.objects.get_or_create(
                         name=location_name,
                         parent=parent_location,
-                        site=site
+                        #site=site
                     )
                     parent_location = location
 
