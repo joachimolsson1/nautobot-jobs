@@ -2,7 +2,7 @@ import requests
 from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
@@ -76,6 +76,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Check for existing device
             device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
             existing_device = Device.objects.filter(serial=device_serial).first()
+            manufacturer = Manufacturer.objects.filter(name="Extreme Networks").first()
             if existing_device:
                 # Update existing device
                 existing_device.name = device_name
@@ -94,7 +95,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     name=device_name,
                     serial=device_serial,
                     #device_role=device_role,
-                    manufacturer="Extreme Networks",
+                    manufacturer=manufacturer,
                     device_type=device_type,
                     tenant=tenant_name,
                     #site=site,
