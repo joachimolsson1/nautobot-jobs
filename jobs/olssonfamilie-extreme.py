@@ -133,18 +133,18 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_namespace.save()
                 self.logger.info(f"Created namespace in Nautobot: {tenant_name}")
                 # Add IP address and associate with management interface
-            if device_ip:
-                ip_address, _ = IPAddress.objects.get_or_create(address=device_ip)
-                management_interface, created = Interface.objects.get_or_create(
-                    device=nautobot_device,
-                    name='mgmt0',  # Adjust interface name as needed
-                    defaults={'type': 'virtual'}  # Adjust interface type as needed
-                )
-                if not created:
-                    self.logger.info(f"Management interface already exists for {device_name}")
-                management_interface.ip_addresses.add(ip_address)
-                management_interface.save()
-                self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
+            #if device_ip:
+            #    ip_address, _ = IPAddress.objects.get_or_create(address=device_ip)
+            #    management_interface, created = Interface.objects.get_or_create(
+            #        device=nautobot_device,
+            #        name='mgmt0',  # Adjust interface name as needed
+            #        defaults={'type': 'virtual'}  # Adjust interface type as needed
+            #    )
+            #    if not created:
+            #        self.logger.info(f"Management interface already exists for {device_name}")
+            #    management_interface.ip_addresses.add(ip_address)
+            #    management_interface.save()
+            #    self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
 
 
         return "Job completed successfully!"
