@@ -4,7 +4,7 @@ from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
 from nautobot.tenancy.models import Tenant
-from nautobot.ipam.models import IPAddress
+from nautobot.ipam.models import IPAddress, Namespace
 from nautobot.extras.models import Status, Role
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
 
@@ -23,7 +23,6 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     )
 
     def run(self, api_token, tenant_name):
-        #api_token = data["api_token"]
         base_url = 'https://api.extremecloudiq.com'
         headers = {
             'Authorization': f'Bearer {api_token}',
@@ -114,8 +113,23 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 )
                 nautobot_device.save()
                 self.logger.info(f"Added Device to Nautobot: {device_name}")
-
-            # Add IP address and associate with management interface
+            # Namespace
+            # Update Namespace
+            existing_namespace = Namespace.objects.filter(name=tenant_name, tenant=tenant_name).first()
+            if existing_namespace:
+                existing_namespace.name = tenant_name
+                existing_namespace.location = device_location
+                existing_namespace.save()
+                self.logger.info(f"Updated Namespace in Nautobot: {tenant_name}")
+            # Create Namespace
+            else:
+                new_namespace = Namespace(
+                    name=tenant_name,
+                    location=location_type,
+                )
+                new_namespace.save()
+                self.logger.info(f"Created namespace in Nautobot: {tenant_name}")
+                # Add IP address and associate with management interface
             if device_ip:
                 ip_address, _ = IPAddress.objects.get_or_create(address=device_ip)
                 management_interface, created = Interface.objects.get_or_create(
