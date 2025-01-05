@@ -115,7 +115,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 self.logger.info(f"Added Device to Nautobot: {device_name}")
             # Namespace
             # Update Namespace
-            existing_namespace = Namespace.objects.filter(name=tenant_name, tenant=tenant_name).first()
+            existing_namespace = Namespace.objects.filter(name=tenant_name).first()
             if existing_namespace:
                 existing_namespace.name = tenant_name
                 existing_namespace.location = device_location
