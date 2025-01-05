@@ -1,7 +1,7 @@
 import requests
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, Manufacturer
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
@@ -46,7 +46,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 location_hierarchy = ['Region', 'Building', 'Campus']  # Example hierarchy
 
                 # Fetch or create the necessary related objects
-                device_type, _ = DeviceType.objects.get_or_create(model=device_model, manufacturer="Extreme Networks")
+                device_type, _ = DeviceType.objects.get_or_create(model=device_model, manufacturer="5cc9453c-b3c9-41a0-8a13-f6d103b87282")
                 status = Status.objects.get(name='Active')  # Adjust status as needed
 
                 # Create or fetch location hierarchy
