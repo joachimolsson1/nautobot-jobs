@@ -65,7 +65,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             existing_location = Location.objects.filter(name=device["locations"][1], tenant=tenant_name).first()
             if not existing_location:
                 new_location = Location(
-                    location_name=device["locations"][1]["name"],
+                    name=device["locations"][1]["name"],
                     tenant=tenant_name,
                     location_type=location_type,
                     status=status
