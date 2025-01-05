@@ -2,6 +2,7 @@ import requests
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, Manufacturer
+from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
@@ -15,11 +16,12 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant_name = StringVar(
-        description="tenant navn på kunden."
-    )    
+    tenant = Job.ModelChoiceField(
+        queryset=Tenant.objects.all(),
+        label="Tenant"
+    )
 
-    def run(self, api_token, tenant_name):
+    def run(self, api_token, tenant):
         #api_token = data["api_token"]
         base_url = 'https://api.extremecloudiq.com'
         headers = {
@@ -59,7 +61,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             # Create or fetch location 
             location = Location.objects.get_or_create(
                 name=device["locations"][1],
-                tenant=tenant_name
+                tenant=tenant
             )
 
 
@@ -74,7 +76,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 existing_device.status = status
                 existing_device.manufacturer = "Extreme Networks"
                 existing_device.location = location  # Set the last location as campus
-                existing_device.tenant = tenant_name
+                existing_device.tenant = tenant
                 existing_device.save()
                 self.logger.info(f"Updated Device in Nautobot: {device_name}")
             else:
@@ -85,7 +87,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     #device_role=device_role,
                     manufacturer="Extreme Networks",
                     device_type=device_type,
-                    tenant=tenant_name,
+                    tenant=tenant,
                     #site=site,
                     status=status,
                     location=location  # Set the last location as campus
