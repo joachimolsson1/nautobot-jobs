@@ -17,8 +17,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant = DynamicModelChoiceField(
-        queryset=Tenant.objects.all(),
+    tenant = StringVar(
         label="Tenant"
     )
 
