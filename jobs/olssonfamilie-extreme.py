@@ -21,7 +21,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         label="Tenant"
     )
 
-    def run(self, api_token, tenant):
+    def run(self, api_token, tenant_name):
         #api_token = data["api_token"]
         base_url = 'https://api.extremecloudiq.com'
         headers = {
@@ -58,7 +58,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             device_type, _ = DeviceType.objects.get_or_create(model=device_model)
             status = Status.objects.get(name='Active')  # Adjust status as needed
 
-            tenant = Tenant.objects.get(name=data["tenant_name"])
+            tenant = Tenant.objects.get(name=tenant_name)
             # Create or fetch location 
             location = Location.objects.get_or_create(
                 name=device["locations"][1],
