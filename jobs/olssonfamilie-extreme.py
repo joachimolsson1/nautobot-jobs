@@ -20,7 +20,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     )    
 
     def run(self, data, commit):
-        api_token = data["api_token"]
+        #api_token = data["api_token"]
         base_url = 'https://api.extremecloudiq.com'
         headers = {
             'Authorization': f'Bearer {api_token}',
