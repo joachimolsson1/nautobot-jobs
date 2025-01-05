@@ -2,10 +2,10 @@ import requests
 from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer, DeviceRole
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
-from nautobot.extras.models import Status
+from nautobot.extras.models import Status, Role
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
 
 
@@ -79,9 +79,9 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
             # Check for device roles
             if device_role == "SWITCH":
-                role_existing = DeviceRole.objects.filter(name="Switch")
+                role_existing = Role.objects.filter(name="Switch")
             elif device_role == "AP":
-                role_existing = DeviceRole.objects.filter(name="Accesspoint")
+                role_existing = Role.objects.filter(name="Accesspoint")
 
             device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
             # Check for existing device
