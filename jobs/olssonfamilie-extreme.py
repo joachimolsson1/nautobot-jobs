@@ -17,9 +17,10 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant_name = ModelChoiceField(
-        queryset=Tenant.objects.all(),
-        label="Tenant"
+    tenant_name = ObjectVar(
+        model=Tenant,
+        query_params={"can_view": True},
+        label="Tenant",
     )
 
     def run(self, api_token, tenant_name):
