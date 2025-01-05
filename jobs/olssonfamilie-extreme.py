@@ -1,7 +1,7 @@
 import requests
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Site, Interface, Location
+from nautobot.dcim.models import Device, DeviceType, Interface, Location
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
 
