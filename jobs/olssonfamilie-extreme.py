@@ -46,9 +46,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 location_hierarchy = ['Region', 'Building', 'Campus']  # Example hierarchy
 
                 # Fetch or create the necessary related objects
-                device_role, _ = DeviceRole.objects.get_or_create(name=device_role_name)
                 device_type, _ = DeviceType.objects.get_or_create(model=device_model)
-                site, _ = Site.objects.get_or_create(name=site_name)
                 status = Status.objects.get(name='Active')  # Adjust status as needed
 
                 # Create or fetch location hierarchy
