@@ -5,7 +5,7 @@ from nautobot.dcim.models import Device, DeviceType, Interface, Location, Manufa
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
-from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
+from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar, ModelChoiceField
 
 
 class FetchAndAddExtremeCloudIQDevices(Job):
@@ -16,7 +16,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant = Job.ModelChoiceField(
+    tenant = ModelChoiceField(
         queryset=Tenant.objects.all(),
         label="Tenant"
     )
