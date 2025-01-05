@@ -46,7 +46,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 location_hierarchy = ['Region', 'Building', 'Campus']  # Example hierarchy
 
                 # Fetch or create the necessary related objects
-                device_type, _ = DeviceType.objects.get_or_create(model=device_model)
+                device_type, _ = DeviceType.objects.get_or_create(model=device_model, manufacturer="Extreme Networks")
                 status = Status.objects.get(name='Active')  # Adjust status as needed
 
                 # Create or fetch location hierarchy
@@ -68,7 +68,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     existing_device.device_type = device_type
                     #existing_device.site = site
                     existing_device.status = status
-                    existing_device.manufacturer = "5cc9453c-b3c9-41a0-8a13-f6d103b87282"
+                    existing_device.manufacturer = "Extreme Networks"
                     existing_device.location = parent_location  # Set the last location as campus
                     existing_device.save()
                     self.logger.info(f"Updated Device in Nautobot: {device_name}")
@@ -78,7 +78,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                         name=device_name,
                         serial=device_serial,
                         #device_role=device_role,
-                        manufacturer="5cc9453c-b3c9-41a0-8a13-f6d103b87282",
+                        manufacturer="Extreme Networks",
                         device_type=device_type,
                         #site=site,
                         status=status
