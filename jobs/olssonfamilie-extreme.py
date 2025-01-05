@@ -84,7 +84,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 existing_device.device_type = device_type
                 #existing_device.site = site
                 existing_device.status = status
-                existing_device.manufacturer = "Extreme Networks"
+                #existing_device.manufacturer = "Extreme Networks"
                 existing_device.location = device_location  # Set the last location as campus
                 existing_device.tenant = tenant_name
                 existing_device.save()
@@ -95,7 +95,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     name=device_name,
                     serial=device_serial,
                     #device_role=device_role,
-                    manufacturer=manufacturer,
+                    #manufacturer=manufacturer,
                     device_type=device_type,
                     tenant=tenant_name,
                     #site=site,
