@@ -15,9 +15,9 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     api_token = StringVar(
         description="API Token for ExtremeCloud IQ"
     )
-    tenant_name = StringVar(
-        description="tenant navn på kunden."
-    )    
+    #tenant_name = StringVar(
+    #    description="tenant navn på kunden."
+    #)    
 
     def run(self, data, commit, api_token):
         #api_token = data["api_token"]
