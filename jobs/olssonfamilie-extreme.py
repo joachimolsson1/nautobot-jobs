@@ -2,7 +2,7 @@ import requests
 from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer, Role
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress
 from nautobot.extras.models import Status
@@ -54,6 +54,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             device_serial = device.get('serial_number')
             device_model = device.get('product_type')
             device_ip = device.get('ip_address')
+            device_role = device.get('device_function')
 
             # Fetch or create the necessary related objects
             device_type, _ = DeviceType.objects.get_or_create(model=device_model)
@@ -73,14 +74,23 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_location.save()
                 self.logger.info(f"Created Location in Nautobot: {device["locations"][1]["name"]}")
 
-            # Check for existing device
+            # Check for existing software version
+            #existing_software = SoftwareVersion
+
+            # Check for device roles
+            if device_role == "SWITCH":
+                role_existing = Role.objects.filter(name="Switch")
+            elif device_role == "AP":
+                role_existing = Role.objects.filter(name="Accesspoint")
+
             device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
+            # Check for existing device
             existing_device = Device.objects.filter(serial=device_serial).first()
             manufacturer = Manufacturer.objects.filter(name="Extreme Networks").first()
             if existing_device:
                 # Update existing device
                 existing_device.name = device_name
-                #existing_device.device_role = device_role
+                existing_device.device_role = role_existing
                 existing_device.device_type = device_type
                 #existing_device.site = site
                 existing_device.status = status
@@ -94,7 +104,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 nautobot_device = Device(
                     name=device_name,
                     serial=device_serial,
-                    #device_role=device_role,
+                    device_role=role_existing,
                     #manufacturer=manufacturer,
                     device_type=device_type,
                     tenant=tenant_name,
