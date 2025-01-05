@@ -30,7 +30,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         page = 1
         page_size = 100  # Adjust the page size as needed
         while True:
-            response = requests.get(f"{base_url}/devices?page={page}&limit={page_size}", headers=headers)
+            response = requests.get(f"{base_url}/devices?page={page}&limit={page_size}&views=FULL", headers=headers)
             
             if response.status_code != 200:
                 self.logger.error(f"Error: {response.status_code}")
