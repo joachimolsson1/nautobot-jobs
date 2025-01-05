@@ -13,10 +13,10 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         description = "Fetches devices from ExtremeCloud IQ and adds them to Nautobot."
 
     api_token = StringVar(
-        description="API Token for ExtremeCloud IQ",
+        description="API Token for ExtremeCloud IQ"
     )
     tenant_name = StringVar(
-        description="tenant navn på kunden.",
+        description="tenant navn på kunden."
     )    
 
     def run(self, data, commit):
