@@ -205,7 +205,6 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
                 mgmt01_object = Interface.objects.filter(device=device_object, name="mgmt0")
                 device_ip_object.assigned_object = mgmt01_object
-                device_ip_object.save()
                 #mgmt01_object.ip_addresses.add(device_ip_object)
                 #mgmt01_object.save()
                 #mgmt01_interface = Interface.objects.filter(device=device_object, name="mgmt0")
