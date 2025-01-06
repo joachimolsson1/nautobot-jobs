@@ -139,7 +139,8 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             existing_prefix = Prefix.objects.filter(network="10.0.0.0/8").first()
             # Update Prefix
             if existing_prefix:
-                existing_prefix.network =  "10.0.0.0/8"
+                existing_prefix.network =  "10.0.0.0"
+                existing_prefix.prefix_length="8"
                 existing_prefix.namepsace = device_namespace
                 existing_prefix.location = device_location
                 existing_prefix.tenant = tenant_name
@@ -148,7 +149,8 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 self.logger.info(f"Updated Prefix in Nautobot: 10.0.0.0/8")
             else:
                 new_prefix = Prefix(
-                    network="10.0.0.0/8",
+                    network="10.0.0.0",
+                    prefix_length="8",
                     namespace=device_namespace,
                     location=device_location,
                     tenant=tenant_name,
