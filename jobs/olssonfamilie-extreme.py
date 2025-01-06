@@ -3,6 +3,7 @@ from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
+from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
 from nautobot.extras.models import Status, Role
@@ -159,18 +160,65 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_prefix.save()
                 self.logger.info(f"Created Prefix in Nautobot: 10.0.0.0/8")
                 # Add IP address and associate with management interface
-            #if device_ip:
-            #    ip_address, _ = IPAddress.objects.get_or_create(address=device_ip)
-            #    management_interface, created = Interface.objects.get_or_create(
-            #        device=nautobot_device,
-            #        name='mgmt0',  # Adjust interface name as needed
-            #        defaults={'type': 'virtual'}  # Adjust interface type as needed
-            #    )
-            #    if not created:
-            #        self.logger.info(f"Management interface already exists for {device_name}")
-            #    management_interface.ip_addresses.add(ip_address)
-            #    management_interface.save()
-            #    self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
+
+            existing_ip = IPAddress.objects.filter(host=device_ip)
+            # Update ip
+            if existing_ip:
+                existing_ip.host = device_ip
+                existing_ip.mask_length="32"
+                existing_ip.namepsace = device_namespace
+                existing_ip.location = device_location
+                existing_ip.tenant = tenant_name
+                existing_ip.status = status
+                existing_ip.dns_name = device_name
+                existing_ip.save()
+                self.logger.info(f"Updated ip in Nautobot: {device_ip}/32")
+            else:
+                new_ip = IPAddress(
+                    host=device_ip,
+                    prefix_length="32",
+                    namespace=device_namespace,
+                    location=device_location,
+                    tenant=tenant_name,
+                    dns_name=device_name,
+                    status=status
+                )
+                new_ip.save()
+                self.logger.info(f"Created ip in Nautobot: {device_ip}/32")
+            device_object = Device.objects.filter(device=device_name)
+            device_ip_object = IPAddress.objects.filter(host=device_ip)
+            existing_mgmt01 = Interface.objects.filter(device=device_name, name="mgmt0")
+            
+            if existing_mgmt01:
+                existing_mgmt01.name = "mgmt01"
+                existing_mgmt01.mgmt_only = True
+                existing_mgmt01.ip_addresses = device_ip_object
+                existing_mgmt01.status = status
+                existing_mgmt01.type = InterfaceTypeChoices.TYPE_VIRTUAL
+                existing_mgmt01.save()
+                self.logger.info(f"Updated interface mgmt01 on device {device_name} in Nautobot.")
+            else:
+                new_ip = Interface(
+                    device=device_object,
+                    name="mgmt01",
+                    mgmt_only=True,
+                    ip_addresses=device_ip_object,
+                    status=status,
+                    type=InterfaceTypeChoices.TYPE_VIRTUAL
+                )
+                new_ip.save()
+                self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
+            
+            management_interface, created = Interface.objects.get_or_create(
+                device=nautobot_device,
+                name='mgmt0',  # Adjust interface name as needed
+                defaults={'type': 'virtual'}  # Adjust interface type as needed
+            )
+            if not created:
+                self.logger.info(f"Management interface already exists for {device_name}")
+            management_interface.ip_addresses.add(ip_address)
+            management_interface.save()
+            self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
 
 
         return "Job completed successfully!"
