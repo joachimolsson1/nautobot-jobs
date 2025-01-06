@@ -196,7 +196,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     device=device_object,
                     name="mgmt01",
                     mgmt_only=True,
-                    ip_addresses=device_ip_object,
+                    #ip_addresses=device_ip_object,
                     status=status,
                     type=InterfaceTypeChoices.TYPE_VIRTUAL
                 )
