@@ -136,7 +136,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             #IP Prefix
             device_namespace = Namespace.objects.filter(name=tenant_name).first()
             # 10.0.0.0/8
-            existing_prefix = Prefix.objects.filter(network="10.0.0.0/8").first()
+            existing_prefix = Prefix.objects.filter(network="10.0.0.0",prefix_length="8").first()
             # Update Prefix
             if existing_prefix:
                 existing_prefix.network =  "10.0.0.0"
