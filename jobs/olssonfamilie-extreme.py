@@ -196,7 +196,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 existing_mgmt01.save()
                 self.logger.info(f"Updated interface mgmt01 on device {device_name} in Nautobot.")
             else:
-                new_ip = Interface(
+                new_mgmt01 = Interface(
                     device=device_object,
                     name="mgmt01",
                     mgmt_only=True,
@@ -204,7 +204,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     status=status,
                     type=InterfaceTypeChoices.TYPE_VIRTUAL
                 )
-                new_ip.save()
+                new_mgmt01.save()
                 self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
             
             management_interface, created = Interface.objects.get_or_create(
