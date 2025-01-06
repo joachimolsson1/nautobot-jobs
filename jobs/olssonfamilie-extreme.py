@@ -175,7 +175,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             else:
                 new_ip = IPAddress(
                     host=device_ip,
-                    prefix_length="32",
+                    mask_length="32",
                     namespace=device_namespace,
                     tenant=tenant_name,
                     dns_name=device_name,
