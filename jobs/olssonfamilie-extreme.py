@@ -204,9 +204,10 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_mgmt01.save()
 
                 mgmt01_object = Interface.objects.filter(device=device_object, name="mgmt0")
-
-                mgmt01_object.ip_addresses.add(device_ip_object)
-                mgmt01_object.save()
+                device_ip_object.assigned_object = mgmt01_object
+                device_ip_object.save()
+                #mgmt01_object.ip_addresses.add(device_ip_object)
+                #mgmt01_object.save()
                 #mgmt01_interface = Interface.objects.filter(device=device_object, name="mgmt0")
                 
                 self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
