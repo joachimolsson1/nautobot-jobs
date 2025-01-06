@@ -161,7 +161,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 self.logger.info(f"Created Prefix in Nautobot: 10.0.0.0/8")
                 # Add IP address and associate with management interface
 
-            existing_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name, namespace=device_namespace)
+            existing_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name)
             # Update ip
             if existing_ip:
                 self.logger.info(f"IP already exists")
