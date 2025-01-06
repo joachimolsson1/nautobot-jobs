@@ -178,7 +178,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 self.logger.info(f"Created ip in Nautobot: {device_ip}/32")
 
                 
-            device_object = Device.objects.filter(serial=device_serial)
+            device_object = Device.objects.filter(serial=device_serial).first()
             device_ip_object = IPAddress.objects.filter(host=device_ip)
             existing_mgmt01 = Interface.objects.filter(device=device_object, name="mgmt0")
             
