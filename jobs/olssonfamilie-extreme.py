@@ -89,7 +89,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
             # Check for existing device
             existing_device = Device.objects.filter(serial=device_serial).first()
-            manufacturer = Manufacturer.objects.filter(name="Extreme Networks").first()
+            #manufacturer = Manufacturer.objects.filter(name="Extreme Networks").first()
             if existing_device:
                 # Update existing device
                 existing_device.name = device_name
@@ -204,23 +204,16 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_mgmt01.save()
                 new_mgmt01.ip_addresses.set(device_ip_object)
 
-                mgmt01_object = Interface.objects.filter(device=device_object, name="mgmt0")
-                device_ip_object.assigned_object = mgmt01_object
+                #mgmt01_object = Interface.objects.filter(device=device_object, name="mgmt0")
+                #device_ip_object.assigned_object = mgmt01_object
                 #mgmt01_object.ip_addresses.add(device_ip_object)
                 #mgmt01_object.save()
                 #mgmt01_interface = Interface.objects.filter(device=device_object, name="mgmt0")
                 
                 self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
             
-            management_interface, created = Interface.objects.get_or_create(
-                device=nautobot_device,
-                name='mgmt0',  # Adjust interface name as needed
-                defaults={'type': 'virtual'}  # Adjust interface type as needed
-            )
-            if not created:
-                self.logger.info(f"Management interface already exists for {device_name}")
-            management_interface.ip_addresses.add(device_ip_object)
-            management_interface.save()
+            existing_device.primary_ip4=device_ip_object
+            existing_device.save()
             self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
 
 
