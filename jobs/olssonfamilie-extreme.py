@@ -4,7 +4,7 @@ from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
 from nautobot.tenancy.models import Tenant
-from nautobot.ipam.models import IPAddress, Namespace
+from nautobot.ipam.models import IPAddress, Namespace, Prefix
 from nautobot.extras.models import Status, Role
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
 
@@ -132,6 +132,30 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 )
                 new_namespace.save()
                 self.logger.info(f"Created namespace in Nautobot: {tenant_name}")
+
+            #IP Prefix
+            device_namespace = Namespace.objects.filter(name=tenant_name).first()
+            # 10.0.0.0/8
+            existing_prefix = Prefix.objects.filter(network="10.0.0.0/8").first()
+            # Update Prefix
+            if existing_prefix:
+                existing_prefix.network =  "10.0.0.0/8"
+                existing_prefix.namepsace = device_namespace
+                existing_prefix.location = device_location
+                existing_prefix.tenant = tenant_name
+                existing_prefix.status = status
+                existing_prefix.save()
+                self.logger.info(f"Updated Prefix in Nautobot: 10.0.0.0/8")
+            else:
+                new_prefix = Prefix(
+                    network="10.0.0.0/8",
+                    namespace=device_namespace,
+                    location=device_location,
+                    tenant=tenant_name,
+                    status=status
+                )
+                new_prefix.save()
+                self.logger.info(f"Created Prefix in Nautobot: 10.0.0.0/8")
                 # Add IP address and associate with management interface
             #if device_ip:
             #    ip_address, _ = IPAddress.objects.get_or_create(address=device_ip)
