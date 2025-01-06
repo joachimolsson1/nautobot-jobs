@@ -167,7 +167,6 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 existing_ip.host = device_ip
                 existing_ip.mask_length="32"
                 existing_ip.namepsace = device_namespace
-                existing_ip.location = device_location
                 existing_ip.tenant = tenant_name
                 existing_ip.status = status
                 existing_ip.dns_name = device_name
@@ -178,7 +177,6 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     host=device_ip,
                     prefix_length="32",
                     namespace=device_namespace,
-                    location=device_location,
                     tenant=tenant_name,
                     dns_name=device_name,
                     status=status
