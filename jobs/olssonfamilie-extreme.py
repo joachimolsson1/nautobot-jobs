@@ -179,7 +179,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
                 
             device_object = Device.objects.filter(serial=device_serial).first()
-            device_ip_object = IPAddress.objects.filter(host=device_ip)
+            device_ip_object = IPAddress.objects.filter(host=device_ip, tenant=tenant_name)
             existing_mgmt01 = Interface.objects.filter(device=device_object, name="mgmt0")
             
             if existing_mgmt01:
@@ -200,7 +200,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     status=status,
                     type=InterfaceTypeChoices.TYPE_VIRTUAL
                 )
-                new_mgmt01.ip_addresses.set(is_primary=True)
+                new_mgmt01.add_ip_addresses()
                 new_mgmt01.save()
 
                 mgmt01_object = Interface.objects.filter(device=device_object, name="mgmt0")
