@@ -161,7 +161,55 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 new_prefix.save()
                 self.logger.info(f"Created Prefix in Nautobot: 10.0.0.0/8")
                 # Add IP address and associate with management interface
+            # Add prefix 192.168.0.0/16
+            existing_prefix = Prefix.objects.filter(network="192.168.0.0",prefix_length="16").first()
+            # Update Prefix
+            if existing_prefix:
+                existing_prefix.network =  "192.168.0.0"
+                existing_prefix.prefix_length="16"
+                existing_prefix.namepsace = device_namespace
+                existing_prefix.location = device_location
+                existing_prefix.tenant = tenant_name
+                existing_prefix.status = status
+                existing_prefix.save()
+                self.logger.info(f"Updated Prefix in Nautobot: 192.168.0.0/16")
+            else:
+                new_prefix = Prefix(
+                    network="192.168.0.0",
+                    prefix_length="16",
+                    namespace=device_namespace,
+                    location=device_location,
+                    tenant=tenant_name,
+                    status=status
+                )
+                new_prefix.save()
+                self.logger.info(f"Created Prefix in Nautobot: 192.168.0.0/16")
+                # Add IP address and associate with management interface
 
+            # Add prefix 172.16.0.0/12
+            existing_prefix = Prefix.objects.filter(network="172.16.0.0",prefix_length="12").first()
+            # Update Prefix
+            if existing_prefix:
+                existing_prefix.network =  "172.16.0.0"
+                existing_prefix.prefix_length="12"
+                existing_prefix.namepsace = device_namespace
+                existing_prefix.location = device_location
+                existing_prefix.tenant = tenant_name
+                existing_prefix.status = status
+                existing_prefix.save()
+                self.logger.info(f"Updated Prefix in Nautobot: 172.16.0.0/12")
+            else:
+                new_prefix = Prefix(
+                    network="172.16.0.0",
+                    prefix_length="12",
+                    namespace=device_namespace,
+                    location=device_location,
+                    tenant=tenant_name,
+                    status=status
+                )
+                new_prefix.save()
+                self.logger.info(f"Created Prefix in Nautobot: 172.16.0.0/12")
+                # Add IP address and associate with management interface
             existing_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name)
             # Update ip
             if existing_ip:
