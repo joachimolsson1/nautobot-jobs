@@ -238,7 +238,8 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                     )
                     new_software.save()
                     self.logger.info(f"Software {device_software} was created in Nautobot.")
-
+            
+            device_software = SoftwareVersion.objects.filter(version=device_software).first()
             primary_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name).first()
             update_device = Device.objects.filter(serial=device_serial).first()
             update_device.primary_ip4=primary_ip
@@ -246,7 +247,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             update_device.role = role_existing
             update_device.device_type = device_type
             update_device.platform=device_platform
-            update_device.software_version=new_software
+            update_device.software_version=device_software
             #existing_device.site = site
             update_device.status = status
             #existing_device.manufacturer = "Extreme Networks"
