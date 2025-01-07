@@ -180,17 +180,10 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 
             device_object = Device.objects.filter(serial=device_serial).first()
             device_ip_object = IPAddress.objects.filter(host=device_ip, tenant=tenant_name)
-            existing_mgmt01 = Interface.objects.filter(device=device_object)
+            existing_mgmt01 = Interface.objects.filter(device=device_object, name="mgmt01")
             
             if existing_mgmt01:
-                existing_mgmt01.name = "mgmt01"
-                existing_mgmt01.mgmt_only = True
-                existing_mgmt01.status = status
-                existing_mgmt01.type = InterfaceTypeChoices.TYPE_VIRTUAL
-                #existing_mgmt01.ip_addresses.add(device_ip_object)
-                existing_mgmt01.save()
-
-                self.logger.info(f"Updated interface mgmt01 on device {device_name} in Nautobot.")
+                self.logger.info(f"Interface mgmt01 already exists on {device_name} in Nautobot.")
             else:
                 new_mgmt01 = Interface(
                     device=device_object,
