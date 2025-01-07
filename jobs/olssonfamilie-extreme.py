@@ -2,7 +2,7 @@ import requests
 from django.forms import ModelChoiceField
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
-from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Manufacturer
+from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Platform, SoftwareVersion
 from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
@@ -56,6 +56,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             device_model = device.get('product_type')
             device_ip = device.get('ip_address')
             device_role = device.get('device_function')
+            device_software = device.get('software_version')
 
             # Fetch or create the necessary related objects
             device_type, _ = DeviceType.objects.get_or_create(model=device_model)
@@ -205,12 +206,32 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 
                 self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
 
+            # Software
+            if device_name.__contains__("SR"):
+                device_platform= Platform.objects.filter(name="Aerohive").first()
+
+                existing_software=SoftwareVersion.objects.filter(version=device_software).first()
+
+                if existing_software:
+                    self.logger.info(f"Software {device_software} already exists.")
+
+                else:
+                    new_software = SoftwareVersion(
+                        version=device_software,
+                        platform=device_platform,
+                        status=status
+                    )
+                    new_software.save()
+                    self.logger.info(f"Software {device_software} was created in Nautobot.")
+
+
             primary_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name).first()
             update_device = Device.objects.filter(serial=device_serial).first()
             update_device.primary_ip4=primary_ip
             update_device.name = device_name
             update_device.role = role_existing
             update_device.device_type = device_type
+            update_device.SoftwareVersion=new_software
             #existing_device.site = site
             update_device.status = status
             #existing_device.manufacturer = "Extreme Networks"
