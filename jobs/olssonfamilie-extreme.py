@@ -245,7 +245,8 @@ class FetchAndAddExtremeCloudIQDevices(Job):
             update_device.name = device_name
             update_device.role = role_existing
             update_device.device_type = device_type
-            update_device.SoftwareVersion=new_software
+            update_device.platform=device_platform
+            update_device.software_version=new_software
             #existing_device.site = site
             update_device.status = status
             #existing_device.manufacturer = "Extreme Networks"
