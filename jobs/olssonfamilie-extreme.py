@@ -212,9 +212,18 @@ class FetchAndAddExtremeCloudIQDevices(Job):
                 
                 self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
 
-            primary_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name)
-            existing_device.primary_ip4=primary_ip
-            existing_device.save()
+            primary_ip = IPAddress.objects.filter(host=device_ip, tenant=tenant_name).first()
+            update_device = Device.objects.filter(serial=device_serial).first()
+            update_device.primary_ip4=primary_ip
+            update_device.name = device_name
+            update_device.role = role_existing
+            update_device.device_type = device_type
+            #existing_device.site = site
+            update_device.status = status
+            #existing_device.manufacturer = "Extreme Networks"
+            update_device.location = device_location  # Set the last location as campus
+            update_device.tenant = tenant_name
+            update_device.save()
             self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
 
 
