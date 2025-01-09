@@ -6,9 +6,9 @@ from nautobot.dcim.models import Device, DeviceType, Interface, Location, Locati
 from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
-from nautobot.extras.models import Status, Role, Secret, SecretsGroup
-from nautobot.extras.secrets import SecretsProvider
-from nautobot.extras.choices import SecretsGroupAccessTypeChoices, SecretsGroupSecretTypeChoices
+from nautobot.extras.models import Status, Role, Secret
+#from nautobot.extras.secrets import SecretsProvider
+#from nautobot.extras.choices import SecretsGroupAccessTypeChoices, SecretsGroupSecretTypeChoices
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
 
 
@@ -26,7 +26,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     #)
 
     def run(self):
-        tenants = Tenant.objects.filter(custom_field_data__contains={"Services": "Network as a Service"})
+        tenants = Tenant.objects.filter(_custom_field_data__contains={"Services": "Network as a Service"})
         
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
