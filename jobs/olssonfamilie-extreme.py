@@ -27,7 +27,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
     def run(self):
         tenants = Tenant.objects.filter(_custom_field_data__Services__contains="Network as a Service")
-        self.logger.info(tenants)
+        self.logger.info(f"Tentants found: {tenants}")
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
             secret_apikey = Secret.objects.get(name=f"extremeapi.{tenant_name_string}")
