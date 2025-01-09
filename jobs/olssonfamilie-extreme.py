@@ -7,7 +7,7 @@ from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
 from nautobot.extras.models import Status, Role
-from nautobot.extras.secrets import get_secret_value
+from nautobot.extras.secrets import EnvironmentVariableSecretsProvider
 from nautobot.extras.jobs import BooleanVar, ChoiceVar, FileVar, Job, ObjectVar, RunJobTaskFailed, StringVar, TextVar
 
 
@@ -25,7 +25,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
     #)
 
     def run(self, tenant_name):
-        secret_apikey = get_secret_value("extremeapi.olssonfamilie")
+        secret_apikey = EnvironmentVariableSecretsProvider("extremeapi.olssonfamilie")
         tenants = Tenant.objects.filter(custom_field_data__contains={"Services": "Network as a Service"})
         
         for tenant_name in tenants:
