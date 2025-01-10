@@ -27,6 +27,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
 
     def run(self):
         tag = Tag.objects.get(name="Network as a Service")
+        self.logger.info(f"Tentant {tenants}")
         tenants = Tenant.objects.filter(tags=tag)
         self.logger.info(f"Tentant {tenants}")
         for tenant_name in tenants:
