@@ -17,20 +17,11 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         name = "Fetch and Add Devices from ExtremeCloud IQ"
         description = "Fetches devices from ExtremeCloud IQ and adds them to Nautobot."
 
-    #api_token = StringVar(
-    #    description="API Token for ExtremeCloud IQ"
-    #)
-    #tenant_name = ObjectVar(
-    #    model=Tenant,
-    #    label="Tenant",
-    #)
-
     def run(self):
         tag = Tag.objects.get(name="Network as a Service")
         self.logger.info(f"Tentant {tag}")
-        tenants = Tenant.objects.all()
-        for ten in tenants:
-            self.logger.info(f"{ten.values()}")
+        tenants = Tenant.objects.filter(_custom_field_data__services_ed18="Network as a Service")
+        self.logger.info(f"{tenants()}")
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
             secret_apikey = Secret.objects.get(name=f"extremeapi.{tenant_name_string}")
