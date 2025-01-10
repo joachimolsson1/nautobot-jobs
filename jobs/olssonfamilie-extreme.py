@@ -18,11 +18,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         description = "Fetches devices from ExtremeCloud IQ and adds them to Nautobot."
 
     def run(self):
-        tag = Tag.objects.get(name="Network as a Service")
-        custom_field = CustomField.objects.all()
-        for cf in custom_field:
-            self.logger.info(f"{cf}")
-            tenants = Tenant.objects.filter(customfield=cf)
+        tenants = Tenant.objects.filter(_custom_field_data={'Services':['Network as a Service']})
         self.logger.info(f"{tenants()}")
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
