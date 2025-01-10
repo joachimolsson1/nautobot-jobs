@@ -29,7 +29,8 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         tag = Tag.objects.get(name="Network as a Service")
         self.logger.info(f"Tentant {tag}")
         tenants = Tenant.objects.all()
-        self.logger.info(f"Tentant {tenants}")
+        for ten in tenants:
+            self.logger.info(f"{ten}")
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
             secret_apikey = Secret.objects.get(name=f"extremeapi.{tenant_name_string}")
