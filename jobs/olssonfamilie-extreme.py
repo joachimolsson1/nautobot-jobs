@@ -23,7 +23,7 @@ class FetchAndAddExtremeCloudIQDevices(Job):
         for tenant_name in tenants:
             tenant_name_string = str(tenant_name.name)
             self.logger.info(tenant_name_string)
-            secret_apikey = Secret.objects.get(name=f"extremeapi.{tenant_name_string}")
+            secret_apikey = Secret.objects.get(name=f"extremeapi.olssonfamilie")
             base_url = 'https://api.extremecloudiq.com'
             headers = {
                 'Authorization': f'Bearer {secret_apikey}',
