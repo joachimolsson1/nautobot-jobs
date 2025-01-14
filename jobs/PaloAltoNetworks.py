@@ -490,4 +490,4 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
         return "Job completed successfully!"
 
 # Register the job
-register_jobs(FetchAndAddExtremeCloudIQDevices)
+register_jobs(FetchAndAddorUpdatePanoramaandFirewall)
