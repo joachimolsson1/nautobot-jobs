@@ -1,3 +1,6 @@
+import requests
+import json
+
 from nautobot.dcim.models import Device
 from nautobot.apps.jobs import JobHookReceiver, register_jobs
 from nautobot.extras.choices import ObjectChangeActionChoices
@@ -21,10 +24,20 @@ class CreateTraefikConfig(JobHookReceiver):
             self.logger.info("Host details: %s", snapshots['differences']['added'])
 
             # check if custom field "Services" exists and is set to "Firewall as a Service"
-            custom_fields = changed_object.custom_field_data["Services"]
-            self.logger.info("TESTING %s", custom_fields)
-            if  custom_fields:
-                self.logger.info("Services: Firewall as a Service")
+            loopback_custom_url = changed_object.custom_field_data["Loopback URL"]
+            if  loopback_custom_url:
+                data = {
+                    'loopbackhostname': f'{loopback_custom_url}',
+                    'routename': f'{changed_object.id}',
+                    'fehostname': f'{changed_object.id}.{loopback_custom_url}',
+                    'servicename': f'{changed_object.id}',
+                    'behostname': f'{changed_object.custom_field_data["Backend IP"]}'
+                }
+
+                # Convert the data to JSON format
+                json_data = json.dumps(data)
+
+                self.logger.info(f"{json_data}")
             else:
                 self.logger.info("Custom field 'Services' does not exist or is not set to 'Firewall as a Service'.")
 
