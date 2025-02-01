@@ -82,12 +82,6 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 # Check for existing software version
                 #existing_software = SoftwareVersion
 
-                # Check for device roles
-                if device_role == "SWITCH":
-                    role_existing = Role.objects.filter(name="Switch").first()
-                elif device_role == "AP":
-                    role_existing = Role.objects.filter(name="Accesspoint").first()
-
                 device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
                 # Check for existing device
                 existing_device = Device.objects.filter(serial=device_serial).first()
