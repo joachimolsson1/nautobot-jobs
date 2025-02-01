@@ -15,6 +15,7 @@ class CreateTraefikConfig(JobHookReceiver):
             return
         
         if action == ObjectChangeActionChoices.ACTION_UPDATE:
+            snapshots = change.get_snapshots()
             self.logger.info("DIFF: %s", snapshots['differences'])
             return
 
