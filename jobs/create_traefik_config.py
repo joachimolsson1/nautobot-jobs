@@ -24,14 +24,14 @@ class CreateTraefikConfig(JobHookReceiver):
             self.logger.info("Host details: %s", snapshots['differences']['added'])
 
             # check if custom field "Services" exists and is set to "Firewall as a Service"
-            loopback_custom_url = changed_object.custom_field_data["Loopback URL"]
+            loopback_custom_url = changed_object.custom_field_data["loopback_url"]
             if  loopback_custom_url:
                 data = {
                     'loopbackhostname': f'{loopback_custom_url}',
                     'routename': f'{changed_object.id}',
                     'fehostname': f'{changed_object.id}.{loopback_custom_url}',
                     'servicename': f'{changed_object.id}',
-                    'behostname': f'{changed_object.custom_field_data["Backend IP"]}'
+                    'behostname': f'{changed_object.custom_field_data["backend_ip"]}'
                 }
 
                 # Convert the data to JSON format
