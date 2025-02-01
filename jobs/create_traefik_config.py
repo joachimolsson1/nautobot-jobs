@@ -21,7 +21,7 @@ class CreateTraefikConfig(JobHookReceiver):
             self.logger.info("Host details: %s", snapshots['differences']['added'])
 
             # check if custom field "Services" exists and is set to "Firewall as a Service"
-            custom_fields = changed_object.custom_field_data
+            custom_fields = changed_object.custom_field_data["Services"]
             self.logger.info("TESTING %s", custom_fields)
             if "Services" in custom_fields and custom_fields["Services"] == "Firewall as a Service":
                 self.logger.info("Services: Firewall as a Service")
