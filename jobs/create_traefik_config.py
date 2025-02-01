@@ -13,6 +13,10 @@ class CreateTraefikConfig(JobHookReceiver):
     def receive_job_hook(self, change, action, changed_object):
         if action == ObjectChangeActionChoices.ACTION_DELETE:
             return
+        
+        if action == ObjectChangeActionChoices.ACTION_UPDATE:
+            self.logger.info("DIFF: %s", snapshots['differences'])
+            return
 
         # log diff output
         snapshots = change.get_snapshots()
@@ -40,10 +44,6 @@ class CreateTraefikConfig(JobHookReceiver):
                 self.logger.info(f"{json_data}")
             else:
                 self.logger.info("Custom field 'Services' does not exist or is not set to 'Firewall as a Service'.")
-
-
-    def validate_serial(self, serial):
-        # add business logic to validate serial
-        return True
+            return
     # Register the job
 register_jobs(CreateTraefikConfig)
