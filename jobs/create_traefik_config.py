@@ -23,7 +23,7 @@ class CreateTraefikConfig(JobHookReceiver):
             # check if custom field "Services" exists and is set to "Firewall as a Service"
             custom_fields = changed_object.custom_field_data["Services"]
             self.logger.info("TESTING %s", custom_fields)
-            if "Services" in custom_fields and custom_fields == "Firewall as a Service":
+            if custom_fields == "Firewall as a Service":
                 self.logger.info("Services: Firewall as a Service")
             else:
                 self.logger.info("Custom field 'Services' does not exist or is not set to 'Firewall as a Service'.")
