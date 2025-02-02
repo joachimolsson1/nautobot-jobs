@@ -284,7 +284,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
 
         #Firewall
         device_role = Role.objects.filter(model="Firewall")
-        devices_firewall = Device.objects.filter(_custom_field_data={'Services':['Firewall as a Service']}, Role=device_role)
+        devices_firewall = Device.objects.filter(_custom_field_data={'Services':['Firewall as a Service']})
 
         for device_firewall in devices_firewall:
             device_name_string = str(device_firewall.name)
