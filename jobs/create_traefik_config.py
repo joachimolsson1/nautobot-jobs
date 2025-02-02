@@ -1,7 +1,6 @@
 import requests
 import json
 
-from nautobot.dcim.models import Device
 from nautobot.apps.jobs import JobHookReceiver, register_jobs
 from nautobot.extras.choices import ObjectChangeActionChoices
 
