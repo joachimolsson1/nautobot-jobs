@@ -22,7 +22,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
 
     def run(self):
         #Panorama
-        device_type = DeviceType.objects.filter(name="Panorama")
+        device_type = DeviceType.objects.filter(model="Panorama")
         devices = Device.objects.filter(_custom_field_data={'Services':['Firewall as a Service']}, device_type=device_type)
         self.logger.info(f"{devices}")
         for device in devices:
