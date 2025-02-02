@@ -11,6 +11,7 @@ from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
 from nautobot.extras.models import Status, Role, Secret, CustomField
+from django.contrib.contenttypes.models import ContentType
 from nautobot.extras.choices import CustomFieldTypeChoices
 from nautobot.extras.jobs import Job
 
