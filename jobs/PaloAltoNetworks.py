@@ -282,7 +282,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
  
 
         #Firewall
-        device_role = Role.objects.filter(name="Firewall")
+        device_role = Role.objects.filter(model="Firewall")
         devices_firewall = Device.objects.filter(_custom_field_data={'Services':['Firewall as a Service']}, Role=device_role)
 
         for device_firewall in devices_firewall:
@@ -351,7 +351,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
             device_license = json.dumps(dict_data)
             device_license_json = json.loads(device_license)
             for license in device_license_json["response"]["result"]["licenses"]["entry"]:
-                custom_field_exists = CustomField.objects.filter(name=f"{license["feature"]}").exists()
+                custom_field_exists = CustomField.objects.filter(label=f"{license["feature"]}").exists()
                 date = license["expires"]
                 if date == "Never":
                     return
