@@ -1,13 +1,16 @@
 import requests
 import json
 import xmltodict
+import base64
+from datetime import datetime
+
 from nautobot.apps.jobs import Job, register_jobs
 from nautobot.extras.jobs import Job
 from nautobot.dcim.models import Device, DeviceType, Interface, Location, LocationType, Platform, SoftwareVersion
 from nautobot.dcim.choices import InterfaceTypeChoices
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import IPAddress, Namespace, Prefix
-from nautobot.extras.models import Status, Role, Secret
+from nautobot.extras.models import Status, Role, Secret, CustomField, CustomFieldTypeChoices, ContentType
 from nautobot.extras.jobs import Job
 
 
@@ -26,12 +29,15 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
             device_name_string = str(device.name)
             #self.logger.info(tenant_name_string)
             command = ""
+            auth_username = Secret.username
+            auth_password = Secret.password
+            encoded_auth = base64.b64encode(data.encode("utf-8"))
             secret_apikey = Secret.objects.get(name=f"{device_name_string} Panorama").get_values()
-            base_url = f'https://{host}/api/?type=op&key=${secret_apikey}&cmd=${command}'
-            #headers = {
-            #    'Authorization': f'Bearer {secret_apikey}',
-            #    'Content-Type': 'application/json'
-            #}
+            base_url = f'https://{host}/api/?type=op&cmd=${command}'
+            headers = {
+                'Authorization': f'Basic {secret_apikey}',
+                'Content-Type': 'application/json'
+            }
             devices = []
             page = 1
             page_size = 100  # Adjust the page size as needed
@@ -80,7 +86,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     self.logger.info(f"Created Location in Nautobot: {device["locations"][1]["name"]}")
 
                 # Check for existing software version
-                #existing_software = SoftwareVersion
+                #existing_software = SoftwareVersion 
 
                 device_location = Location.objects.filter(name=device["locations"][1]["name"], tenant=tenant_name).first()
                 # Check for existing device
@@ -280,14 +286,19 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
 
         for device_firewall in devices_firewall:
             device_name_string = str(device_firewall.name)
-            device_host = device_firewall.custom_field_data["netsecurity_service_proxy"]
+            #device_loopback_url = device_firewall.custom_field_data["loopback_url"]
             tenant_name = device_firewall.tenant
             tenant_name_string = str(device_firewall.tenant)
             command =  "<show><system><info></info></system></show>"
             secret_apikey = Secret.objects.get(name=f"{device_name_string} Firewall").get_values()
-            base_url = f'https://{device_host}/api/?type=op&key=${secret_apikey}&cmd=${command}'
+            #auth_encode = f"{Secret.username}:{Secret.password}"
+            #encoded_auth = base64.b64encode(auth_encode.encode("utf-8"))
 
-            response_xml = requests.get(f'https://{device_host}/api/?type=op&key=${secret_apikey}&cmd=${command}')
+            headers = {
+                'Authorization': f'Basic {secret_apikey}'
+            }
+            # System Info
+            response_xml = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd=${command}',headers=headers)
                 
             if response_xml.status_code != 200:
                 self.logger.error(f"Error: {response.status_code}")
@@ -295,32 +306,78 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
             
             dict_data = xmltodict.parse(response_xml)
             devices_firewall = json.dumps(dict_data, indent=4)
+            firewall_device = json.loads(device_firewall)
 
-            firewall_name = device.get('hostname')
-            firewall_serial = device.get('serial')
-            firewall_model = device.get('model')
-            firewall_ip = device.get('ip-address')
-            firewall_software = device.get('sw-version')
-            firewall_app = device.get('app-version')
-            firewall_av = device.get('av-version')
-            firewall_wildfire = device.get('wildfire-version')
-            firewall_url_filter = device.get('url-filtering-version')
-            firewall_threat = device.get('threat-version')
+            firewall_name = firewall_device.get('hostname')
+            firewall_serial = firewall_device.get('serial')
+            firewall_model = firewall_device.get('model')
+            firewall_ip = firewall_device.get('ip-address')
+            firewall_software = firewall_device.get('sw-version')
+            firewall_app = firewall_device.get('app-version')
+            firewall_av = firewall_device.get('av-version')
+            firewall_wildfire = firewall_device.get('wildfire-version')
+            firewall_url_filter = firewall_device.get('url-filtering-version')
+            firewall_threat = firewall_device.get('threat-version')
             
             firewall_platform= Platform.objects.filter(name="PAN OS").first()
             existing_software=SoftwareVersion.objects.filter(version=device_software).first()
-
+            # Create Software
             if existing_software:
                 self.logger.info(f"Software {device_software} already exists.")
 
             else:
                 new_software = SoftwareVersion(
-                    version=device_software,
-                    platform=device_platform,
+                    version=firewall_software,
+                    platform=firewall_platform,
                     status=status
                 )
                 new_software.save()
                 self.logger.info(f"Software {device_software} was created in Nautobot.")
+            
+            #Device variables
+            existing_firewall_device = Device.objects.filter(id=device_firewall.id).first()
+            obj_software = SoftwareVersion.objects.filter(name=f"{firewall_software}")
+
+            ## License
+            command_license =  "<request><license><info></info></license></request>"
+
+            response_licese = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd={command_license}',headers=headers, verify=False)
+            if response_licese.status_code != 200:
+                print(response.text)
+                
+            xml_data = response.content
+            dict_data = xmltodict.parse(xml_data)
+            device_license = json.dumps(dict_data)
+            device_license_json = json.loads(device_license)
+            for license in device_license_json["response"]["result"]["licenses"]["entry"]:
+                custom_field_exists = CustomField.objects.filter(name=f"{license["feature"]}").exists()
+                date = license["expires"]
+                if date == "Never":
+                    return
+                else:
+                    if custom_field_exists:
+                        date_obj = datetime.strptime(date, "%B %d, %Y")
+                        iso_date = date_obj.isoformat()
+                        existing_firewall_device.custom_field_data[f"{license["feature"]}"] = iso_date
+                        existing_firewall_device.save()
+                    else:
+                        custom_field = CustomField(
+                            name=license["feature"],
+                            type=CustomFieldTypeChoices.TYPE_DATE,
+                            required=False,
+                            description=""
+                        )
+                        custom_field.save()
+                        # Apply the custom field to the Device model
+                        device_content_type = ContentType.objects.get_for_model(Device)
+                        custom_field.content_types.add(device_content_type)
+                        date_obj = datetime.strptime(date, "%B %d, %Y")
+                        iso_date = date_obj.isoformat()
+                        existing_firewall_device.custom_field_data[f"{license["feature"]}"] = iso_date
+                        existing_firewall_device.save()
+
+
+
 
             # Namespace
             # Update Namespace
@@ -460,23 +517,23 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
             self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
 
 
-            obj_software = SoftwareVersion.objects.filter(name=f"{firewall_software}")
+            
             # Update existing device
-            existing_device.name = firewall_name
-            existing_device.serial = firewall_serial
-            existing_device.device_type = firewall_model
-            existing_device.software_version = obj_software
-            existing_device.custom_field_data["app_version"] = firewall_app
-            existing_device.custom_field_data["anti_virus"] = firewall_av
-            existing_device.custom_field_data["wildifre"] = firewall_wildfire
-            existing_device.custom_field_data["url_filter"] = firewall_url_filter
-            existing_device.custom_field_data["threat_version"]= firewall_threat
-            existing_device.tenant = tenant_name
-            existing_device.status = status
-            existing_device.platform=firewall_platform
-            existing_device.primary_ip4=primary_ip
-            existing_device.role = Role.objects.filter(name="Firewall").first()
-            existing_device.save()
+            existing_firewall_device.name = firewall_name
+            existing_firewall_device.serial = firewall_serial
+            existing_firewall_device.device_type = firewall_model
+            existing_firewall_device.software_version = obj_software
+            existing_firewall_device.custom_field_data["app_version"] = firewall_app
+            existing_firewall_device.custom_field_data["anti_virus"] = firewall_av
+            existing_firewall_device.custom_field_data["wildifre"] = firewall_wildfire
+            existing_firewall_device.custom_field_data["url_filter"] = firewall_url_filter
+            existing_firewall_device.custom_field_data["threat_version"]= firewall_threat
+            existing_firewall_device.tenant = tenant_name
+            existing_firewall_device.status = status
+            existing_firewall_device.platform=firewall_platform
+            existing_firewall_device.primary_ip4=primary_ip
+            existing_firewall_device.role = Role.objects.filter(name="Firewall").first()
+            existing_firewall_device.save()
             self.logger.info(f"Updated Device in Nautobot: {device_name}")
 
 
