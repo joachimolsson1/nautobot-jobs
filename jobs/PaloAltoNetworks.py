@@ -290,7 +290,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
         device_role = Role.objects.filter(name="Firewall")
         devices_firewall = Device.objects.filter(_custom_field_data__icontains='Firewall as a Service')
         for device_firewall in devices_firewall:
-            if device_firewall.role == "Firewall":
+            if str(device_firewall.role) == "Firewall":
             
                 device_name_string = str(device_firewall.name)
                 #device_loopback_url = device_firewall.custom_field_data["loopback_url"]
