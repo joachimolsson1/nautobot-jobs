@@ -281,7 +281,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             self.logger.info(f"Software {device_software} was created in Nautobot.")
 
                 else:
-                    return
+                    break
 
 
  
@@ -360,7 +360,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     custom_field_exists = CustomField.objects.filter(label=f"{license["feature"]}").exists()
                     date = license["expires"]
                     if date == "Never":
-                        return
+                        break
                     else:
                         if custom_field_exists:
                             date_obj = datetime.strptime(date, "%B %d, %Y")
@@ -543,7 +543,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 existing_firewall_device.save()
                 self.logger.info(f"Updated Device in Nautobot: {device_name}")
             else:
-                return
+                break
 
 
                 
