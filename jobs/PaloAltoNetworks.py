@@ -329,7 +329,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 firewall_threat = firewall_device.get('threat-version')
                 
                 firewall_platform= Platform.objects.filter(name="PAN OS").first()
-                existing_software=SoftwareVersion.objects.filter(version=device_software).first()
+                existing_software=SoftwareVersion.objects.filter(version=firewall_software).first()
                 # Create Software
                 if existing_software:
                     self.logger.info(f"Software {device_software} already exists.")
