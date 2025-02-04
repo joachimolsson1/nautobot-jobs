@@ -314,7 +314,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 
                 xml_data = response_xml.content
                 dict_data = xmltodict.parse(xml_data)
-                devices_firewall = json.dumps(dict_data, indent=4)
+                devices_firewall = json.dumps(dict_data)
                 firewall_device = json.loads(device_firewall)
 
                 firewall_name = firewall_device.get('hostname')
