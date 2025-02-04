@@ -23,7 +23,6 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
 
     def run(self):
         #Firewall
-        device_role = Role.objects.filter(name="Firewall")
         devices_firewall = Device.objects.filter(_custom_field_data__icontains='Firewall as a Service')
         for device_firewall in devices_firewall:
             if str(device_firewall.role) == "Firewall":
@@ -42,10 +41,10 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     'Authorization': f'Basic {secret_apikey}'
                 }
                 # System Info
-                response_xml = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd={command}',headers=headers, verify=False)
+                response_xml = requests.get(f'https://{device_firewall.id}{device_firewall["loopback_url"]}/api/?type=op&cmd={command}',headers=headers, verify=False)
                     
                 if response_xml.status_code != 200:
-                    self.logger.error(f"Error: {response.status_code}")
+                    self.logger.error(f"Error: {response_xml.status_code}")
                     break
                 self.logger.info(response_xml.status_code)
                 self.logger.info(response_xml.text)
