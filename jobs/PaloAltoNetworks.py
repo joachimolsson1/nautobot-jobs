@@ -349,7 +349,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 #Device variables
                 existing_firewall_device = Device.objects.filter(id=device_firewall.id).first()
                 obj_software = SoftwareVersion.objects.filter(version=f"{firewall_software}")
-                obj_device_type = DeviceType.objects.get_or_create(model=firewall_model)
+                obj_device_type = DeviceType.objects.get(model=firewall_model)
 
                 ## License
                 command_license =  "<request><license><info></info></license></request>"
@@ -369,7 +369,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         break
                     else:
                         if custom_field_exists:
-                            date_obj = datetime.strptime(date, "%B %d, %Y")
+                            date_obj = datetime.strptime(date, "%B %d, %Y").date()
                             iso_date = date_obj.isoformat()
                             existing_firewall_device.custom_field_data[f"{license["feature"]}"] = iso_date
                             existing_firewall_device.save()
