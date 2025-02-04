@@ -519,7 +519,6 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     
                     self.logger.info(f"Created interface mgmt01 on device {device_name} in Nautobot.")
                 
-                device_software = SoftwareVersion.objects.filter(version=device_software).first()
                 primary_ip = IPAddress.objects.filter(host=firewall_ip, tenant=tenant_name).first()
                 
                 
