@@ -353,11 +353,11 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 ## License
                 command_license =  "<request><license><info></info></license></request>"
 
-                response_licese = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd={command_license}',headers=headers, verify=False)
-                if response_licese.status_code != 200:
+                response_license = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd={command_license}',headers=headers, verify=False)
+                if response_license.status_code != 200:
                     print(response.text)
                     
-                xml_data = response.content
+                xml_data = response_license.content
                 dict_data = xmltodict.parse(xml_data)
                 device_license = json.dumps(dict_data)
                 device_license_json = json.loads(device_license)
