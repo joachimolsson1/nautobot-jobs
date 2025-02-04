@@ -503,7 +503,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     self.logger.info(f"Created ip in Nautobot: {firewall_ip}/32")
 
                     
-                #device_object = Device.objects.filter(serial=device_serial).first()
+                device_object = Device.objects.filter(serial=device_serial).first()
                 device_ip_object = IPAddress.objects.filter(host=firewall_ip, tenant=tenant_name)
                 existing_mgmt01 = Interface.objects.filter(device=device_object, name="mgmt01")
                 
