@@ -375,7 +375,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         else:
                             custom_field = CustomField(
                                 label=f"License: {license["feature"]}",
-                                grouping="Palo Alto Licenses:"
+                                grouping="Palo Alto Licenses:",
                                 type=CustomFieldTypeChoices.TYPE_DATE,
                                 required=False,
                                 description=""
