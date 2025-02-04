@@ -393,11 +393,11 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
 
                 # Namespace
                 # Update Namespace
-                tenant_name 
+                firewall_location = device_firewall.location
                 existing_namespace = Namespace.objects.filter(name=tenant_name).first()
                 if existing_namespace:
                     existing_namespace.name = tenant_name_string
-                    existing_namespace.location = device_location
+                    existing_namespace.location = firewall_location
                     existing_namespace.save()
                     self.logger.info(f"Updated Namespace in Nautobot: {tenant_name}")
                 # Create Namespace
@@ -418,7 +418,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     existing_prefix.network =  "10.0.0.0"
                     existing_prefix.prefix_length="8"
                     existing_prefix.namepsace = device_namespace
-                    existing_prefix.location = device_location
+                    existing_prefix.location = firewall_location
                     existing_prefix.tenant = tenant_name
                     existing_prefix.status = status
                     existing_prefix.save()
@@ -428,7 +428,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         network="10.0.0.0",
                         prefix_length="8",
                         namespace=device_namespace,
-                        location=device_location,
+                        location=firewall_location,
                         tenant=tenant_name,
                         status=status
                     )
@@ -442,7 +442,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     existing_prefix.network =  "192.168.0.0"
                     existing_prefix.prefix_length="16"
                     existing_prefix.namepsace = device_namespace
-                    existing_prefix.location = device_location
+                    existing_prefix.location = firewall_location
                     existing_prefix.tenant = tenant_name
                     existing_prefix.status = status
                     existing_prefix.save()
@@ -452,7 +452,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         network="192.168.0.0",
                         prefix_length="16",
                         namespace=device_namespace,
-                        location=device_location,
+                        location=firewall_location,
                         tenant=tenant_name,
                         status=status
                     )
@@ -467,7 +467,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     existing_prefix.network =  "172.16.0.0"
                     existing_prefix.prefix_length="12"
                     existing_prefix.namepsace = device_namespace
-                    existing_prefix.location = device_location
+                    existing_prefix.location = firewall_location
                     existing_prefix.tenant = tenant_name
                     existing_prefix.status = status
                     existing_prefix.save()
@@ -477,7 +477,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         network="172.16.0.0",
                         prefix_length="12",
                         namespace=device_namespace,
-                        location=device_location,
+                        location=firewall_location,
                         tenant=tenant_name,
                         status=status
                     )
@@ -495,7 +495,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         mask_length="32",
                         namespace=device_namespace,
                         tenant=tenant_name,
-                        dns_name=device_name,
+                        dns_name=device_name_string,
                         status=status
                     )
                     new_ip.save()
