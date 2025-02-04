@@ -297,7 +297,8 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 tenant_name = device_firewall.tenant
                 tenant_name_string = str(device_firewall.tenant)
                 command =  "<show><system><info></info></system></show>"
-                secret_apikey = Secret.objects.get(name=f"{device_name_string} Firewall").get_values()
+                self.logger.info(device_name_string)
+                secret_apikey = Secret.objects.get(name=f"{device_name_string} Firewall").get_value()
                 #auth_encode = f"{Secret.username}:{Secret.password}"
                 #encoded_auth = base64.b64encode(auth_encode.encode("utf-8"))
 
