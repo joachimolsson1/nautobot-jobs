@@ -374,7 +374,8 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             existing_firewall_device.save()
                         else:
                             custom_field = CustomField(
-                                label=license["feature"],
+                                label=f"License: {license["feature"]}",
+                                grouping="Palo Alto Licenses:"
                                 type=CustomFieldTypeChoices.TYPE_DATE,
                                 required=False,
                                 description=""
