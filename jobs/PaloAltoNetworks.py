@@ -332,8 +332,9 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 firewall_platform= Platform.objects.filter(name="PAN OS").first()
                 existing_software=SoftwareVersion.objects.filter(version=firewall_software).first()
                 # Create Software
+                self.logger.info(firewall_software)
                 if existing_software:
-                    self.logger.info(f"Software {device_software} already exists.")
+                    self.logger.info(f"Software {firewall_software} already exists.")
 
                 else:
                     new_software = SoftwareVersion(
@@ -342,7 +343,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         status=status
                     )
                     new_software.save()
-                    self.logger.info(f"Software {device_software} was created in Nautobot.")
+                    self.logger.info(f"Software {firewall_software} was created in Nautobot.")
                 
                 #Device variables
                 existing_firewall_device = Device.objects.filter(id=device_firewall.id).first()
