@@ -312,7 +312,8 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     self.logger.error(f"Error: {response.status_code}")
                     break
                 
-                dict_data = xmltodict.parse(response_xml)
+                xml_data = response_xml.content
+                dict_data = xmltodict.parse(xml_data)
                 devices_firewall = json.dumps(dict_data, indent=4)
                 firewall_device = json.loads(device_firewall)
 
