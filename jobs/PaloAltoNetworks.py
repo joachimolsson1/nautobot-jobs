@@ -307,7 +307,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     'Authorization': f'Basic {secret_apikey}'
                 }
                 # System Info
-                response_xml = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd=${command}',headers=headers, verify=False)
+                response_xml = requests.get(f'https://10.10.50.1:4443/api/?type=op&cmd={command}',headers=headers, verify=False)
                     
                 if response_xml.status_code != 200:
                     self.logger.error(f"Error: {response.status_code}")
