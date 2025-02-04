@@ -371,7 +371,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                         if custom_field_exists:
                             date_obj = datetime.strptime(date, "%B %d, %Y").date()
                             iso_date = date_obj.isoformat()
-                            existing_firewall_device.custom_field_data[f"{license["feature"]}"] = iso_date
+                            existing_firewall_device.custom_field_data[f"License: {license["feature"]}"] = iso_date
                             existing_firewall_device.save()
                             self.logger.info(f"Added date {iso_date} to license {license["feature"]}")
                         else:
