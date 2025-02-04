@@ -348,7 +348,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 
                 #Device variables
                 existing_firewall_device = Device.objects.filter(id=device_firewall.id).first()
-                obj_software = SoftwareVersion.objects.filter(version=f"{firewall_software}")
+                obj_software = SoftwareVersion.objects.filter(version=f"{firewall_software}").first()
                 obj_device_type = DeviceType.objects.get(model=firewall_model)
 
                 ## License
@@ -363,7 +363,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 device_license = json.dumps(dict_data)
                 device_license_json = json.loads(device_license)
                 for license in device_license_json["response"]["result"]["licenses"]["entry"]:
-                    custom_field_exists = CustomField.objects.filter(label=f"{license["feature"]}").exists()
+                    custom_field_exists = CustomField.objects.filter(label=f"License: {license["feature"]}").exists()
                     date = license["expires"]
                     if date == "Never":
                         break
@@ -386,7 +386,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             # Apply the custom field to the Device model
                             device_content_type = ContentType.objects.get_for_model(Device)
                             custom_field.content_types.add(device_content_type)
-                            date_obj = datetime.strptime(date, "%B %d, %Y")
+                            date_obj = datetime.strptime(date, "%B %d, %Y").date()
                             iso_date = date_obj.isoformat()
                             existing_firewall_device.custom_field_data[f"License: {license["feature"]}"] = iso_date
                             existing_firewall_device.save()
