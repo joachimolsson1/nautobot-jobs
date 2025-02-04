@@ -549,7 +549,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 existing_firewall_device.primary_ip4=primary_ip
                 existing_firewall_device.role = Role.objects.filter(name="Firewall").first()
                 existing_firewall_device.save()
-                self.logger.info(f"Updated Device in Nautobot: {device_name}")
+                self.logger.info(f"Updated Device in Nautobot: {firewall_name}")
             else:
                 break
 
