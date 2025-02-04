@@ -377,6 +377,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             parsed_string = parsed_string.replace(" ", "_")
                             # Add the prefix "license_"
                             final_string = "license_" + parsed_string
+                            self.logger.info(final_string)
                             device_firewall.custom_field_data[f"{final_string}"] = iso_date
                             device_firewall.save()
                             self.logger.info(f"Added date {iso_date} to license {license["feature"]}")
