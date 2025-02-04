@@ -26,6 +26,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
         device_role = Role.objects.filter(name="Panorama")
         devices = Device.objects.filter(_custom_field_data__icontains='Firewall as a Service')
         self.logger.info(f"{devices}")
+        status = Status.objects.get(name='Active') 
         for device in devices:
             if device.role == "Panorama":
 
