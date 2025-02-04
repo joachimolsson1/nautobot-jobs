@@ -375,6 +375,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             parsed_string = license["feature"].lower()
                             # Step 3: Replace spaces with underscores
                             parsed_string = parsed_string.replace(" ", "_")
+                            parsed_string = parsed_string.replace("-", "_")
                             # Add the prefix "license_"
                             final_string = "license_" + parsed_string
                             self.logger.info(final_string)
@@ -397,7 +398,8 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                             iso_date = date_obj.isoformat()
                             parsed_string = license["feature"].lower()
                             # Step 3: Replace spaces with underscores
-                            parsed_string = parsed_string.replace(" ", "_").replace("-", "_")
+                            parsed_string = parsed_string.replace(" ", "_")
+                            parsed_string = parsed_string.replace("-", "_")
                             # Add the prefix "license_"
                             final_string = "license_" + parsed_string
                             self.logger.info(final_string)
