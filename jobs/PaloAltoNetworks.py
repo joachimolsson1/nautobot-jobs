@@ -319,16 +319,16 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 devices_firewall = json.dumps(dict_data)
                 firewall_device = json.loads(devices_firewall)
 
-                firewall_name = firewall_device.get('hostname')
-                firewall_serial = firewall_device.get('serial')
-                firewall_model = firewall_device.get('model')
-                firewall_ip = firewall_device.get('ip-address')
-                firewall_software = firewall_device.get('sw-version')
-                firewall_app = firewall_device.get('app-version')
-                firewall_av = firewall_device.get('av-version')
-                firewall_wildfire = firewall_device.get('wildfire-version')
-                firewall_url_filter = firewall_device.get('url-filtering-version')
-                firewall_threat = firewall_device.get('threat-version')
+                firewall_name = firewall_device["response"]["result"]["system"]["hostname"]
+                firewall_serial = firewall_device["response"]["result"]["system"]["serial"]
+                firewall_model = firewall_device["response"]["result"]["system"]["model"]
+                firewall_ip = firewall_device["response"]["result"]["system"]["ip-address"]
+                firewall_software = firewall_device["response"]["result"]["system"]["sw-version"]
+                firewall_app = firewall_device["response"]["result"]["system"]["app-version"]
+                firewall_av = firewall_device["response"]["result"]["system"]["av-version"]
+                firewall_wildfire = firewall_device["response"]["result"]["system"]["wildfire-version"]
+                firewall_url_filter = firewall_device["response"]["result"]["system"]["url-filtering-version"]
+                firewall_threat = firewall_device["response"]["result"]["system"]["threat-version"]
                 
                 firewall_platform= Platform.objects.filter(name="PAN OS").first()
                 existing_software=SoftwareVersion.objects.filter(version=firewall_software).first()
