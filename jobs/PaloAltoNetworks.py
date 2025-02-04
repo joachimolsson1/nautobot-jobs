@@ -349,7 +349,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 #Device variables
                 existing_firewall_device = Device.objects.filter(id=device_firewall.id).first()
                 obj_software = SoftwareVersion.objects.filter(version=f"{firewall_software}")
-
+                obj_device_type = DeviceType.objects.get_or_create(model=firewall_model)
                 ## License
                 command_license =  "<request><license><info></info></license></request>"
 
@@ -533,7 +533,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 # Update existing device
                 existing_firewall_device.name = firewall_name
                 existing_firewall_device.serial = firewall_serial
-                existing_firewall_device.device_type = firewall_model
+                existing_firewall_device.device_type = obj_device_type
                 existing_firewall_device.software_version = obj_software
                 existing_firewall_device.custom_field_data["app_version"] = firewall_app
                 existing_firewall_device.custom_field_data["anti_virus"] = firewall_av
