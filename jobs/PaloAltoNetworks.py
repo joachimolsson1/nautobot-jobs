@@ -508,7 +508,7 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                 existing_mgmt01 = Interface.objects.filter(device=device_firewall, name="mgmt01")
                 
                 if existing_mgmt01:
-                    self.logger.info(f"Interface mgmt01 already exists on {device_name_string} in Nautobot.")
+                    self.logger.info(f"Interface mgmt01 already exists on {firewall_name} in Nautobot.")
                 else:
                     new_mgmt01 = Interface(
                         device=device_firewall,
@@ -521,12 +521,12 @@ class FetchAndAddorUpdatePanoramaandFirewall(Job):
                     new_mgmt01.save()
                     new_mgmt01.ip_addresses.set(device_ip_object)
                     
-                    self.logger.info(f"Created interface mgmt01 on device {device_name_string} in Nautobot.")
+                    self.logger.info(f"Created interface mgmt01 on device {firewall_name} in Nautobot.")
                 
                 primary_ip = IPAddress.objects.filter(host=firewall_ip, tenant=tenant_name).first()
                 
                 
-                self.logger.info(f"Assigned IP {device_ip} to {device_name} management interface")
+                self.logger.info(f"Assigned IP {firewall_ip} to {firewall_name} management interface")
 
 
                 
